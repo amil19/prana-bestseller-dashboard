@@ -1,4 +1,5 @@
 import altair as alt
+import plotly.express as px
 import datetime
 import polars as pl
 import bestseller_main_funcs as bs_funcs
@@ -45,7 +46,7 @@ def create_altair_pie(chart_df: pl.DataFrame,chart_title: str,value: str, catego
     return pie_chart
 
 def create_px_pie(df, values: str, names: str, colors=None):
-    import plotly.express as px
+    
     if not colors:
         
         fig = px.pie(df, values=values, names=names,
@@ -61,7 +62,6 @@ def create_px_pie(df, values: str, names: str, colors=None):
 
 def create_radial_chart(source: pl.DataFrame, values: str, color: str, color_pallete: str):
 
-    #source = source.with_columns((pl.col(values) * 100).alias(values)).cast({values: pl.Int64})
     
     base = alt.Chart(source).encode(
     alt.Theta(f"{values}:Q").stack(True),
@@ -75,3 +75,13 @@ def create_radial_chart(source: pl.DataFrame, values: str, color: str, color_pal
     c2 = base.mark_text(radiusOffset=20).encode(text=alt.Text(f"{values}:Q", format=",.2%"))
 
     return c1 + c2
+
+def plot_offset_bar(df: pl.DataFrame, xaxis: str, yaxis: str, color: str, xOffset: str):
+    
+    offset_bar_chart = alt.Chart(df).mark_bar().encode(
+        alt.X(xaxis),
+        alt.Y(yaxis),
+        color=color,
+        xOffset=xOffset)
+
+    return offset_bar_chart

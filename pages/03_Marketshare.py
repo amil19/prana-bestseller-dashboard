@@ -1,27 +1,18 @@
 import streamlit as st
 import polars as pl
-import sqlite3 as sql
 import bestseller_main_funcs as bs_funcs
 import bestseller_plots as bs_plots
-import altair as alt
 
 ##################################################################
 st.set_page_config(
     page_title="Marketshare",
-    #page_icon="👋",
 )
-#st.sidebar.success("Fan Confidence Rating")
 st.title("Direct Market Marketshare")
 
-st.write("Insert explanation of rating and importance")
-
 ##################################################################
-
-# Set connection to SQL DB
-conn = sql.connect('prana_bestseller.db')
-
 # Load base data
-base_data = bs_funcs.load_data_from_sql(conn).lazy()
+base_data = st.session_state['base_data']
+##################################################################
 
 def create_marketshare_base(base_df):
     # Columns needed
@@ -84,31 +75,25 @@ for idx, rd in enumerate(rd_options):
     # Create columns for table and chart
     globals()["dollars_"+str(idx)+'a'], globals()["dollars_"+str(idx)+'b'] = st.columns(2)
     with globals()["dollars_"+str(idx)+'a']:
+        
         # Write dollars table
         st.dataframe(format_pct(marketshare_dollars,'Marketshare_Dollars').rename({'PUBLISHER': 'Publisher','Marketshare_Dollars': 'Marketshare Dollars PCT'}))
+        
     with globals()["dollars_"+str(idx)+'b']:
+        
         # Plot Pie Chart
         st.write(bs_plots.create_px_pie(marketshare_dollars,'Marketshare_Dollars','PUBLISHER'))
 
     # Marketsare by Units
     st.subheader(f'Marketshare by Units ({bs_funcs.monYear(rd)})')
+    
     # Create columns for table and chart
     globals()["units_"+str(idx)+'a'], globals()["units_"+str(idx)+'b'] = st.columns(2)
     with globals()["units_"+str(idx)+'a']:
+        
         # Write units table
         st.dataframe(format_pct(marketshare_units,'Marketshare_Units').rename({'PUBLISHER': 'Publisher','Marketshare_Units': 'Marketshare Units PCT'}))
     with globals()["units_"+str(idx)+'b']:
+        
         # Plot Pie Chart
         st.write(bs_plots.create_px_pie(marketshare_units,'Marketshare_Units','PUBLISHER'))
-
-    # # Plot marketshare dollars
-    # pie_chart = bs_plots.create_pie_chart(marketshare_dollars,'Marketshare by Dollars','Marketshare_Dollars','PUBLISHER')
-    
-    # st.altair_chart(pie_chart)
-    
-    # color_scheme = st.selectbox("Select color scheme", options = ['accent', 'category10', 'category20', 'category20b', 'category20c', 'dark2', 'paired', 'pastel1', 'pastel2', 'set1', 'set2', 'set3', 'tableau10', 'tableau20'])
-    
-    
-    # radial_chart = bs_plots.create_radial_chart(marketshare_dollars.sort("Marketshare_Dollars",descending=True),'Marketshare_Dollars','PUBLISHER', 'greens')
-    
-    # st.altair_chart(radial_chart)

@@ -1,5 +1,4 @@
 import streamlit as st
-import sqlite3 as sql
 import polars as pl
 import math
 import bestseller_main_funcs as bs_funcs
@@ -7,20 +6,15 @@ import bestseller_plots as bs_plots
 ##################################################################
 st.set_page_config(
     page_title="Fan Confidence Rating",
-    #page_icon="👋",
 )
 #st.sidebar.success("Fan Confidence Rating")
 st.title("Fan Confidence Rating")
 
-st.write("Insert explanation of rating and importance")
 
 ##################################################################
-
-# Set connection to SQL DB
-conn = sql.connect('prana_bestseller.db')
-
 # Load base data
-base_data = bs_funcs.load_data_from_sql(conn).lazy()
+base_data = st.session_state['base_data']
+##################################################################
 
 def create_fcr_data(base_data: pl.LazyFrame):
     # Subset FCR data
