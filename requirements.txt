@@ -4,4 +4,4 @@ altair
 numpy
 pandas
 plotly-express
-psycopg2
+psycopg2-binary
