@@ -49,7 +49,7 @@ def monYearToDate(yyyymm):
 def convert_dates(df,date_column):
     df = df.with_columns(
         pl.col(date_column)\
-        .map_elements(lambda x: monYearToDate(x)))
+        .map_elements(lambda x: monYearToDate(x)),allow_object=True)
     
     return df
 
