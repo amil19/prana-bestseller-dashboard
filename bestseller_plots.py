@@ -11,7 +11,7 @@ def create_fcr_plot(fcr_df: pl.DataFrame, start_date: str, end_date: str):
     fcr_plot_df = bs_funcs.convert_dates(fcr_plot_df,"ReportingDate")
     ## Set values for y-axis
     y_min = fcr_plot_df.select(pl.min("ConsumerCopies")).item()
-    y_max = fcr_plot_df.select(pl.max("ConsumerCopies")).item()*1.25
+    y_max = fcr_plot_df.select(pl.max("ConsumerCopies")).item()
 
     # Create Altair plot
     fcr_chart = (
@@ -25,7 +25,7 @@ def create_fcr_plot(fcr_df: pl.DataFrame, start_date: str, end_date: str):
                                       tickCount=len(fcr_plot_df))),
                 y=alt.Y('ConsumerCopies',
                         title='Fan Confidence Rating',
-                        scale=alt.Scale(domain=[y_min,y_max]))
+                        scale=alt.Scale(domain=[y_min,y_max+0.05]))
                 ,color=alt.value("#008000")
                )
     )
