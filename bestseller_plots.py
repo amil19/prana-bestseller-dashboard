@@ -11,7 +11,7 @@ def create_fcr_plot(fcr_df: pl.DataFrame, start_date: str, end_date: str):
     fcr_plot_df = bs_funcs.convert_dates(fcr_plot_df,"ReportingDate")
     ## Set values for y-axis
     y_min = fcr_plot_df.select(pl.min("ConsumerCopies")).item()
-    y_max = fcr_plot_df.select(pl.max("ConsumerCopies")).item()
+    y_max = fcr_plot_df.select(pl.max("ConsumerCopies")).item()*1.25
 
     # Create Altair plot
     fcr_chart = (
