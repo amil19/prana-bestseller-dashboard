@@ -1,5 +1,6 @@
-import streamlit as st
 import polars as pl
+import streamlit as st
+
 import bestseller_main_funcs as bs_funcs
 
 ##################################################################
@@ -11,31 +12,26 @@ st.title("Monthly Bestseller Lists")
 
 ##################################################################
 # Load base data
-base_data = st.session_state['base_data']
+base_data = st.session_state["base_data"]
 ##################################################################
-
-# Get most recent reporting date
-most_recent_RD = base_data.select(pl.max('ReportingDate')).collect().item()
 
 # Create titles_df
 titles_df = bs_funcs.create_titles_df(base_data)
 
-# Populate reporting dates for select box
-rd_options = titles_df['ReportingDate'].unique().sort(descending=True)
+rd = bs_funcs.create_reporting_date_multiselect(titles_df)
 
-# Select reporting date
-rd = st.selectbox(label='Select reporting month',options=rd_options, index=0)
+agg_by_title = st.checkbox("Aggregate by Title?")
 
 # Create top 100 dataframe
-top_100 = bs_funcs.create_top_titles_df(titles_df,rd,'top100')
+top_100 = bs_funcs.create_top_titles_df(titles_df, rd, "top100",agg_by_title)
 
 # Create Indie 25 dataframe
-indie_25 = bs_funcs.create_top_titles_df(titles_df,rd,'indie25')
+indie_25 = bs_funcs.create_top_titles_df(titles_df, rd, "indie25",agg_by_title)
 
 
 # Write both tables
-st.subheader(f'Top 100 ({bs_funcs.monYear(rd)})')
+st.subheader(f"Top 100 ({[bs_funcs.monYear(rpt_dt) for rpt_dt in rd]})")
 st.write(top_100)
 
-st.subheader(f'Indie 25 ({bs_funcs.monYear(rd)})')
+st.subheader(f"Indie 25 ({[bs_funcs.monYear(rpt_dt) for rpt_dt in rd]})")
 st.write(indie_25)
