@@ -102,7 +102,7 @@ def select_start(df):
 
 
 def select_dates(df):
-    start_options = df["ReportingDate"].unique().sort()
+    start_options = df["ReportingDate"].unique().sort().to_list()
     start_def = len(start_options) - 12
     start = st.selectbox(
         label="Select start date for report", options=start_options, index=start_def
